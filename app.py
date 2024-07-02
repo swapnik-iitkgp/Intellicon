@@ -198,42 +198,42 @@ else:
             justify-content: flex-end;
         }
         .bot-message {
-            justify-content: flex-start.
+            justify-content: flex-start;
         }
         .message-content {
             padding: 10px;
             border-radius: 20px;
-            max-width: 70%.
+            max-width: 70%;
         }
         .user-message .message-content {
             background-color: #FF4B4B;
-            color: white.
+            color: white;
         }
         .bot-message .message-content {
             background-color: #FFD700;
-            color: black.
+            color: black;
         }
         .avatar {
             width: 45px;  /* Size for zoom effect */
             height: 45px; /* Size for zoom effect */
             border-radius: 30%;
-            margin: 0 10px.
+            margin: 0 10px;
         }
         .input-container {
             position: fixed;
             bottom: 0;
-            width: 100%.
+            width: 100%;
         }
         .input-container form {
             bottom: 0;
             display: flex;
-            align-items: center.
+            align-items: center;
         }
         .input-container input {
             flex: 1;
             padding: 10px;
             border-radius: 5px 0 0 5px;
-            border: none.
+            border: none;
         }
         .input-container button {
             padding: 10px 20px;
@@ -241,7 +241,7 @@ else:
             color: white;
             border: none;
             border-radius: 0 5px 5px 0;
-            white-space: nowrap.
+            white-space: nowrap;
         }
         </style>
         """,
