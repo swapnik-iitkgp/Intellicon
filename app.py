@@ -67,53 +67,86 @@ if "messages" not in st.session_state:
     st.session_state["messages"].append({"role": "bot", "content": "Hi there! <br> This is Intellicon 🤖 <br> Ready to get started? <br> Upload your PDFs for detailed insights."})
 
 # Load T5 model and tokenizer only once and store in session state
-if "t5_model" not in st.session_state:
-    st.session_state["t5_model"] = T5ForConditionalGeneration.from_pretrained('t5-small')
-    st.session_state["t5_tokenizer"] = T5Tokenizer.from_pretrained('t5-small', legacy=False)
+# if "t5_model" not in st.session_state:
+#     st.session_state["t5_model"] = T5ForConditionalGeneration.from_pretrained('t5-small')
+#     st.session_state["t5_tokenizer"] = T5Tokenizer.from_pretrained('t5-small', legacy=False)
 
-# Load GPT-2 model and tokenizer only once and store in session state
-if "gpt_model" not in st.session_state:
-    st.session_state["gpt_model"] = GPT2LMHeadModel.from_pretrained('gpt2')
-    st.session_state["gpt_tokenizer"] = GPT2Tokenizer.from_pretrained('gpt2', legacy=False)
+# # Load GPT-2 model and tokenizer only once and store in session state
+# if "gpt_model" not in st.session_state:
+#     st.session_state["gpt_model"] = GPT2LMHeadModel.from_pretrained('gpt2')
+#     st.session_state["gpt_tokenizer"] = GPT2Tokenizer.from_pretrained('gpt2', legacy=False)
 
-def generate_t5_insights(prompt, relevant_texts):
-    combined_prompt = prompt + "\n\n" + "\n\n".join(relevant_texts)
-    tokenizer = st.session_state["t5_tokenizer"]
-    model = st.session_state["t5_model"]
+# def generate_t5_insights(prompt, relevant_texts):
+#     combined_prompt = prompt + "\n\n" + "\n\n".join(relevant_texts)
+#     tokenizer = st.session_state["t5_tokenizer"]
+#     model = st.session_state["t5_model"]
     
-    inputs = tokenizer.encode("summarize: " + combined_prompt, return_tensors='pt', max_length=512, truncation=True)
+#     inputs = tokenizer.encode("summarize: " + combined_prompt, return_tensors='pt', max_length=512, truncation=True)
     
-    outputs = model.generate(inputs, max_length=300, num_return_sequences=1, no_repeat_ngram_size=2)
+#     outputs = model.generate(inputs, max_length=300, num_return_sequences=1, no_repeat_ngram_size=2)
     
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+#     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
     
-    response_lines = response.split('. ')
-    unique_lines = []
-    for line in response_lines:
-        if line and line not in unique_lines:
-            unique_lines.append(line)
+#     response_lines = response.split('. ')
+#     unique_lines = []
+#     for line in response_lines:
+#         if line and line not in unique_lines:
+#             unique_lines.append(line)
     
-    structured_response = '. '.join(unique_lines) + '.'
+#     structured_response = '. '.join(unique_lines) + '.'
     
-    return structured_response
+#     return structured_response
+
+# def generate_gpt_insights(prompt, relevant_texts):
+#     combined_prompt = prompt + "\n\n" + "\n\n".join(relevant_texts)
+#     tokenizer = st.session_state["gpt_tokenizer"]
+#     model = st.session_state["gpt_model"]
+    
+#     inputs = tokenizer.encode(combined_prompt, return_tensors='pt')
+    
+#     outputs = model.generate(inputs, max_length=300, num_return_sequences=1, no_repeat_ngram_size=2)
+    
+#     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    
+#     response = response.replace(prompt, '').strip()
+    
+#     response_lines = response.split('. ')
+#     unique_lines = []
+#     for line in response_lines:
+#         if line and line not in unique_lines and not line.endswith(','):
+#             unique_lines.append(line)
+    
+#     structured_response = '. '.join(unique_lines) + '.'
+    
+#     return structured_response
+
+import requests
+
+API_URL = "https://api-inference.huggingface.co/models/gpt2"
+API_TOKEN = "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"  # Replace with your Hugging Face API token
+
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
+
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 def generate_gpt_insights(prompt, relevant_texts):
     combined_prompt = prompt + "\n\n" + "\n\n".join(relevant_texts)
-    tokenizer = st.session_state["gpt_tokenizer"]
-    model = st.session_state["gpt_model"]
-    
-    inputs = tokenizer.encode(combined_prompt, return_tensors='pt')
-    
-    outputs = model.generate(inputs, max_length=300, num_return_sequences=1, no_repeat_ngram_size=2)
-    
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    
-    response = response.replace(prompt, '').strip()
-    
-    response_lines = response.split('. ')
+    payload = {
+        "inputs": "summarize: " + combined_prompt,
+        "parameters": {
+            "max_length": 300,
+            "num_return_sequences": 1,
+            "no_repeat_ngram_size": 2
+        }
+    }
+    response = query(payload)
+    response_text = response[0]['generated_text']
+    response_lines = response_text.split('. ')
     unique_lines = []
     for line in response_lines:
-        if line and line not in unique_lines and not line.endswith(','):
+        if line and line not in unique_lines:
             unique_lines.append(line)
     
     structured_response = '. '.join(unique_lines) + '.'
@@ -306,8 +339,8 @@ else:
             # Generate insights based on the relevant texts
             if model_choice == "GPT-2":
                 insights = generate_gpt_insights(query, relevant_texts)
-            # elif model_choice == "Flan-T5":
-            #     insights = generate_t5_insights(query, relevant_texts)
+            elif model_choice == "Flan-T5":
+                insights = generate_gpt_insights(query, relevant_texts)
             
             # Add user query and response to chat history
             st.session_state["messages"].append({"role": "user", "content": query})
