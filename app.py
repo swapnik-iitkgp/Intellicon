@@ -138,7 +138,8 @@ def generate_gpt_insights(prompt, relevant_texts):
         "parameters": {
             "max_length": 300,
             "num_return_sequences": 1,
-            "no_repeat_ngram_size": 2
+            "no_repeat_ngram_size": 3,
+            "repetition_penalty": 2.5 
         }
     }
     response = make_api_request(payload)
