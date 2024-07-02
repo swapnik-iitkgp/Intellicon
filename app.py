@@ -121,6 +121,7 @@ if "messages" not in st.session_state:
 #     return structured_response
 
 import requests
+import time
 
 API_URL = "https://api-inference.huggingface.co/models/gpt2"
 API_TOKEN = "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" 
@@ -144,6 +145,58 @@ def generate_gpt_insights(prompt, relevant_texts):
     }
     response = make_api_request(payload)
     response_text = response[0]['generated_text']
+    response_lines = response_text.split('. ')
+    unique_lines = []
+    for line in response_lines:
+        if line and line not in unique_lines:
+            unique_lines.append(line)
+    
+    structured_response = '. '.join(unique_lines) + '.'
+    
+    return structured_response
+
+
+# Headers for the request
+headers1 = {
+    'Authorization': f'Bearer {API_TOKEN}',
+    'Content-Type': 'application/json'
+}
+
+# The model to use for summarization
+model = "facebook/bart-large-cnn"
+
+# The endpoint URL for the Hugging Face Inference API
+url = f'https://api-inference.huggingface.co/models/{model}'
+
+
+def generate_t5_insights(prompt, relevant_texts, retries=5, delay=20):
+    combined_prompt = prompt + "\n\n" + "\n\n".join(relevant_texts)
+    payload = {
+        "inputs": combined_prompt,
+        "parameters": {
+            "max_length": 50,  # Adjust the max_length as needed
+            "min_length": 10,
+            "do_sample": False
+        }
+    }
+    for attempt in range(retries):
+        response = requests.post(url, headers=headers1, json=payload)
+        if response.status_code == 200:
+            summary = response.json()
+            break
+        elif response.status_code == 503:
+            print(f"Model is loading, waiting for {delay} seconds before retrying...")
+            time.sleep(delay)
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            break
+
+    response = summary
+    if isinstance(response, list) and 'summary_text' in response[0]:
+        response_text = response[0]['summary_text']
+    else:
+        raise ValueError(f"Unexpected response format: {response}")
+
     response_lines = response_text.split('. ')
     unique_lines = []
     for line in response_lines:
@@ -341,7 +394,7 @@ else:
             if model_choice == "GPT-2":
                 insights = generate_gpt_insights(query, relevant_texts)
             elif model_choice == "Flan-T5":
-                insights = generate_gpt_insights(query, relevant_texts)
+                insights = generate_t5_insights(query, relevant_texts)
             
             # Add user query and response to chat history
             st.session_state["messages"].append({"role": "user", "content": query})
