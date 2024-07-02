@@ -304,10 +304,10 @@ else:
                 relevant_texts = [all_texts[results[0]]]
 
             # Generate insights based on the relevant texts
-            if model_choice == "Flan-T5":
-                insights = generate_t5_insights(query, relevant_texts)
-            else:
+            if model_choice == "GPT-2":
                 insights = generate_gpt_insights(query, relevant_texts)
+            # elif model_choice == "Flan-T5":
+            #     insights = generate_t5_insights(query, relevant_texts)
             
             # Add user query and response to chat history
             st.session_state["messages"].append({"role": "user", "content": query})
