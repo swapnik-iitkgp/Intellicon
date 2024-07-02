@@ -1,7 +1,7 @@
 langchain
 streamlit
 faiss-cpu
-PyMuPDF
+pymupdf
 transformers
 sentence-transformers
 numpy

@@ -238,9 +238,9 @@ else:
         .input-container button {
             padding: 10px 20px;
             background-color: #FF4B4B;
-            color: white.
-            border: none.
-            border-radius: 0 5px 5px 0.
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
             white-space: nowrap.
         }
         </style>
