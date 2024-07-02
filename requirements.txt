@@ -10,3 +10,4 @@ glob2
 pytest-shutil
 sentencepiece
 frontend
+tools
