@@ -1,5 +1,5 @@
 import streamlit as st
-from transformers import T5Tokenizer, T5ForConditionalGeneration, GPT2LMHeadModel, GPT2Tokenizer
+# from transformers import T5Tokenizer, T5ForConditionalGeneration, GPT2LMHeadModel, GPT2Tokenizer
 from extract_text import extract_text_from_uploaded_pdf
 from generate_embeddings import generate_embeddings
 from store_vector import store_embeddings
