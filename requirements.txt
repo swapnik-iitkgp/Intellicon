@@ -8,3 +8,4 @@ numpy
 fitz
 glob2
 pytest-shutil
+sentencepiece
