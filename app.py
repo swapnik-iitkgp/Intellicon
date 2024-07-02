@@ -162,11 +162,8 @@ headers1 = {
     'Content-Type': 'application/json'
 }
 
-# The model to use for summarization
-model = "facebook/bart-large-cnn"
-
 # The endpoint URL for the Hugging Face Inference API
-url = f'https://api-inference.huggingface.co/models/{model}'
+url = f'https://api-inference.huggingface.co/models/facebook/bart-large-cnn'
 
 
 def generate_t5_insights(prompt, relevant_texts, retries=5, delay=20):
