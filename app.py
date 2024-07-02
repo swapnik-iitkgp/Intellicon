@@ -42,8 +42,8 @@ def get_base64_image(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 # Convert images to base64
-user_avatar_base64 = get_base64_image("user.png")
-robot_avatar_base64 = get_base64_image("bot.png")
+user_avatar_base64 = get_base64_image("./imgs/user.png")
+robot_avatar_base64 = get_base64_image("./imgs/bot.png")
 
 # Load vector store or initialize a new one
 index = None
