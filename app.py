@@ -382,10 +382,15 @@ else:
             results = search_index(query, index, model)
             
             # Load the original text segments
-            if isinstance(results[0], np.ndarray):  # Ensure results[0] is iterable
-                relevant_texts = [all_texts[i] for i in results[0] if i < len(all_texts)]
+            if not results or len(results) == 0:
+                st.session_state["messages"].append({"role": "bot", "content": "No relevant information found for your query."})
             else:
-                relevant_texts = [all_texts[results[0]]]
+                # Load the original text segments
+                try:
+                    relevant_texts = [all_texts[i] for i in results[0] if i < len(all_texts)]
+                except (IndexError, TypeError) as e:
+                    st.session_state["messages"].append({"role": "bot", "content": f"Error in retrieving relevant texts: {e}"})
+                    relevant_texts = []
 
             # Generate insights based on the relevant texts
             if model_choice == "GPT-2":
