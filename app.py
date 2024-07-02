@@ -123,11 +123,11 @@ if "messages" not in st.session_state:
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/gpt2"
-API_TOKEN = "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"  # Replace with your Hugging Face API token
+API_TOKEN = "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" 
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
-def query(payload):
+def make_api_request(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
@@ -141,7 +141,7 @@ def generate_gpt_insights(prompt, relevant_texts):
             "no_repeat_ngram_size": 2
         }
     }
-    response = query(payload)
+    response = make_api_request(payload)
     response_text = response[0]['generated_text']
     response_lines = response_text.split('. ')
     unique_lines = []
