@@ -4,3 +4,7 @@ faiss-cpu
 PyMuPDF
 transformers
 sentence-transformers
+numpy
+fitz
+glob2
+shutil
