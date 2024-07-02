@@ -1,6 +1,6 @@
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
-tokenizer = T5Tokenizer.from_pretrained('t5-large')
+tokenizer = T5Tokenizer.from_pretrained('t5-large', legacy=False)
 model = T5ForConditionalGeneration.from_pretrained('t5-large')
 
 def generate_t5_insights(prompt, relevant_texts):

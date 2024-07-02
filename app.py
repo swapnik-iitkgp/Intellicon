@@ -231,10 +231,10 @@ else:
             else:
                 relevant_texts = [all_texts[results[0]]]
 
-            if model_choice == "GPT-2":
+            if model_choice == "Flan-T5":
+                insights = generate_t5_insights(query, relevant_texts)
+            else:
                 insights = generate_gpt_insights(query, relevant_texts)
-            # elif model_choice == "Flan-T5":
-            #     insights = generate_t5_insights(query, relevant_texts)
             
             st.session_state["messages"].append({"role": "bot", "content": insights})
         

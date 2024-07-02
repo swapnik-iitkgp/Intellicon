@@ -1,6 +1,6 @@
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2', legacy=False)
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 def generate_gpt_insights(prompt, relevant_texts):
