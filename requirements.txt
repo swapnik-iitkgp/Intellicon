@@ -7,4 +7,4 @@ sentence-transformers
 numpy
 fitz
 glob2
-shutil
+pytest-shutil
